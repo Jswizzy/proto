@@ -40,4 +40,47 @@ class GreetServiceImpl : GreetServiceGrpc.GreetServiceImplBase() {
 
         responseObserver.onCompleted()
     }
+
+    override fun longGreet(responseObserver: StreamObserver<LongGreetResponse>): StreamObserver<LongGreetRequest> =
+        object : StreamObserver<LongGreetRequest> {
+            val result = StringBuilder()
+
+            override fun onNext(value: LongGreetRequest) {
+                result.append("Hello ${value.greeting.firstName}! ")
+            }
+
+            override fun onError(t: Throwable) {
+                //ignore
+            }
+
+            override fun onCompleted() {
+                responseObserver.onNext(
+                    LongGreetResponse
+                        .newBuilder()
+                        .setResult(result.toString())
+                        .build()
+                )
+                responseObserver.onCompleted()
+            }
+        }
+
+    override fun greetEveryone(responseObserver: StreamObserver<GreetEveryoneResponse>): StreamObserver<GreetEveryoneRequest> =
+        object : StreamObserver<GreetEveryoneRequest> {
+            override fun onNext(value: GreetEveryoneRequest) {
+                responseObserver.onNext(
+                    GreetEveryoneResponse.newBuilder()
+                        .setResult("Hello ${value.greeting.firstName}.")
+                        .build()
+                )
+            }
+
+            override fun onError(t: Throwable) {
+                println(t.message)
+            }
+
+            override fun onCompleted() {
+                responseObserver.onCompleted()
+            }
+
+        }
 }

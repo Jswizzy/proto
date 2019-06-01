@@ -16,6 +16,5 @@ fun main() {
                 server.shutdown()
                 println("Server shutdown")
             })
-            server.awaitTermination()
-        }
+        }.awaitTermination()
 }
